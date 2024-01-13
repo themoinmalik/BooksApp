@@ -16,6 +16,9 @@ public class BookService {
 
     private final BookRepository repository;
 
+    private final BookESRepository bookESRepository;
+
+
 //    public  save(BookRequest request) {
 //        var book = Book.builder()
 //                .id(request.getId())
@@ -32,6 +35,7 @@ public class BookService {
         book.setAuthor(request.getAuthor());
         book.setIsbn(request.getName());
         repository.save(book);
+        bookESRepository.save(book);
         return new ResponseEntity<>(request, HttpStatus.CREATED);
     }
 
