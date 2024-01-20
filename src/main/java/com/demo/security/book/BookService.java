@@ -2,6 +2,7 @@ package com.demo.security.book;
 
 import com.demo.security.exceptions.ProductNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -16,33 +17,29 @@ public class BookService {
 
     private final BookRepository repository;
 
-    private final BookESRepository bookESRepository;
-
-
-//    public  save(BookRequest request) {
-//        var book = Book.builder()
-//                .id(request.getId())
-//                .author(request.getAuthor())
-//                .isbn(request.getIsbn())
-//                .build();
-//        repository.save(book);
-//    }
-
-    public ResponseEntity<BookRequest> save(BookRequest request){
-
-        Book book = new Book();
-//        book.setId(request.getId());
-        book.setAuthor(request.getAuthor());
-        book.setIsbn(request.getName());
+    public ResponseEntity<BookRequest> save(BookRequest request) {
+        var book = Book.builder()
+                .author(request.getAuthor())
+                .isbn(request.getName())
+                .build();
         repository.save(book);
-        bookESRepository.save(book);
         return new ResponseEntity<>(request, HttpStatus.CREATED);
     }
 
-    // find by Id.
+//    public ResponseEntity<BookRequest> save(BookRequest request){
+//
+//        Book book = new Book();
+//        book.setAuthor(request.getAuthor());
+//        book.setIsbn(request.getName());
+//        repository.save(book);
+//        return new ResponseEntity<>(request, HttpStatus.CREATED);
+//    }
+
+    // find by Id
+    @Cacheable(cacheNames = "Book", key = "#Id")
     public ResponseEntity<Book> findById(@PathVariable int Id){
         Book book = repository.findById(Id).orElseThrow(
-                () -> new ProductNotFoundException("no book is available for this id")
+                () -> new ProductNotFoundException("no book is available for id {} -" + Id)
         );
         return new ResponseEntity<>(book, HttpStatus.OK);
     }
