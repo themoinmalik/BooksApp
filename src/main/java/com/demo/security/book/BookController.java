@@ -9,6 +9,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/books")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "http://localhost:5173/books")
 public class BookController {
 
     private final BookService service;
@@ -17,9 +18,6 @@ public class BookController {
     public ResponseEntity<BookRequest> save(
             @RequestBody BookRequest request
     ) {
-//        service.save(request);
-//        return ResponseEntity.accepted().build();
-
         return service.save(request);
     }
 

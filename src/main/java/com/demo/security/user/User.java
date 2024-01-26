@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 
 import java.util.Collection;
 import java.util.List;
+
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -26,7 +28,10 @@ public class User implements UserDetails {
 
   private String firstname;
   private String lastname;
+
+  @NotNull
   private String email;
+
   private String password;
 
   @Enumerated(EnumType.STRING)
